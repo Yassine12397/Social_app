@@ -5,11 +5,18 @@ import 'package:hexcolor/hexcolor.dart';
 
 ThemeData darkTheme = ThemeData(
     textTheme: TextTheme(
-        bodyText1: TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w600,
-      color: Colors.white,
-    )),
+      bodyText1: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+      ),
+      subtitle1: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+        height: 1.3,
+      ),
+    ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       type: BottomNavigationBarType.fixed,
       selectedItemColor: Colors.teal,
@@ -27,6 +34,7 @@ ThemeData darkTheme = ThemeData(
         titleTextStyle: TextStyle(
           color: Colors.white,
           fontSize: 20,
+          fontFamily: 'jannah',
           fontWeight: FontWeight.bold,
         ),
         backwardsCompatibility: false,
@@ -40,11 +48,17 @@ ThemeData darkTheme = ThemeData(
 ThemeData lightTheme = ThemeData(
     fontFamily: 'jannah',
     textTheme: TextTheme(
+        subtitle1: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+          height: 1.3,
+        ),
         bodyText1: TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w600,
-      color: Colors.black,
-    )),
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        )),
     primarySwatch: defaultColor,
     floatingActionButtonTheme:
         FloatingActionButtonThemeData(backgroundColor: defaultColor),
@@ -58,6 +72,7 @@ ThemeData lightTheme = ThemeData(
         ),
         titleTextStyle: TextStyle(
           color: Colors.black,
+          fontFamily: 'jannah',
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),

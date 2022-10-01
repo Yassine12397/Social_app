@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/shared/network/local/cache_helper.dart';
 import 'package:flutter_app/shared/styles/colors.dart';
+import 'package:flutter_app/shared/styles/icon_broken.dart';
 
 Widget defaultButton({
   double width = double.infinity,
@@ -12,7 +13,7 @@ Widget defaultButton({
 }) =>
     Container(
       width: width,
-      height: 50,
+      height: 40,
       child: MaterialButton(
         onPressed: () {
           function();
@@ -136,3 +137,15 @@ void printFullText(String? text) {
   final pattern = RegExp('.{1,800}');
   pattern.allMatches(text!).forEach((match) => match.group(0));
 }
+
+  PreferredSizeWidget defaultAppBar({
+  required BuildContext context,
+  String? title,
+  List<Widget>? actions
+})=>AppBar(
+  leading: IconButton(onPressed: (){Navigator.pop(context);},icon: Icon(IconBroken.Arrow___Left_2),),
+  title: Text(title!),
+  titleSpacing: 5,
+  actions: actions,
+);
+

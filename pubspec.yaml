@@ -36,10 +36,12 @@ dependencies:
   hexcolor: ^2.0.0
   shared_preferences: ^2.0.5
   smooth_page_indicator: ^1.0.0+2
+  image_picker: ^0.7.4
   #firebase
   firebase_core: ^1.0.3
   firebase_auth: ^1.0.3
   cloud_firestore: ^1.0.4
+  firebase_storage: ^8.0.3
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +59,9 @@ flutter:
     - family: Jannah
       fonts:
         - asset: assets/fonts/jannah.ttf
+    - family: IconBroken
+      fonts:
+        - asset: assets/fonts/icons.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
