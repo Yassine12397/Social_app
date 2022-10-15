@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/layout/social_layout/cubit/states.dart';
+import 'package:flutter_app/models/message_model.dart';
 import 'package:flutter_app/models/post_model.dart';
 import 'package:flutter_app/models/social_user_model.dart';
 import 'package:flutter_app/modules/chats/chats_screen.dart';
@@ -47,6 +48,7 @@ class SocialCubit extends Cubit<SocialStates> {
   List<String> titles = ['Home', 'Chats', 'Posts', 'Users', 'Settings'];
 
   void changeBottomNav(int index) {
+    if (index == 1) getAllUsers();
     if (index == 2)
       emit(SocialNewPostState());
     else {
@@ -287,14 +289,121 @@ class SocialCubit extends Cubit<SocialStates> {
   List<SocialUserModel> users = [];
 
   void getAllUsers() {
-
-    FirebaseFirestore.instance.collection('users').get().then((value) {
-      value.docs.forEach((element) {
-        users.add(SocialUserModel.fromJson(element.data()));
+    if (users.length < 0)
+      FirebaseFirestore.instance.collection('users').get().then((value) {
+        value.docs.forEach((element) {
+          if (element.data()['uId'] != model!.uId)
+            users.add(SocialUserModel.fromJson(element.data()));
+        });
+        emit(SocialGetAllUserSuccessStates());
+      }).catchError((error) {
+        emit(SocialGetAllUserErrorStates(error.toString()));
       });
-      emit(SocialGetAllUserSuccessStates());
+  }
+
+  void sendMessage({
+    required String receiverId,
+    required String dateTime,
+    required String text,
+    String? messageImage,
+  }) {
+    MessageModel messageModel = MessageModel(
+      senderId: model!.uId,
+      receiverId: receiverId,
+      dateTime: dateTime,
+      text: text,
+      messageImage: messageImage ?? '',
+    );
+    //set my chat
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(model!.uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .add(messageModel.toMap())
+        .then((value) {
+      emit(SocialSendMessageSuccessStates());
     }).catchError((error) {
-      emit(SocialGetAllUserErrorStates(error.toString()));
+      emit(SocialSendMessageErrorStates(error.toString()));
+      //set receiver chat
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(receiverId)
+          .collection('chats')
+          .doc(model!.uId)
+          .collection('messages')
+          .add(messageModel.toMap())
+          .then((value) {
+        emit(SocialSendMessageSuccessStates());
+      }).catchError((error) {
+        emit(SocialSendMessageErrorStates(error.toString()));
+      });
+    });
+  }
+
+  List<MessageModel> messages = [];
+
+  void getMessages({
+    required String receiverId,
+  }) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(model!.uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      messages = [];
+      event.docs.forEach((element) {
+        messages.add(MessageModel.fromJson(element.data()));
+      });
+      emit(SocialGetMessageSuccessStates());
+    });
+  }
+
+  File? messagePicture;
+
+  Future<void> getMessageImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      messagePicture = File(pickedFile.path);
+      emit(SocialMessageImagePickedSuccessState());
+    } else {
+      print('No message image selected');
+      emit(SocialMessageImagePickedErrorState());
+    }
+  }
+
+  void uploadMessageImage({
+    required String receiverId,
+    required String dateTime,
+    required String text,
+  }) {
+    firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('users')
+        .child(model!.uId)
+        .child('chats')
+        .child(receiverId)
+        .child('messages/${Uri.file(messagePicture!.path).pathSegments.last}')
+        .putFile(messagePicture!)
+        .then((value) {
+      value.ref.getDownloadURL().then((value) {
+        print(value);
+        sendMessage(
+            receiverId: receiverId,
+            dateTime: dateTime,
+            text: text,
+            messageImage: value);
+      }).catchError((error) {
+        emit(SocialSendMessageSuccessStates());
+      });
+    }).catchError((error) {
+      emit(SocialSendMessageErrorStates(error.toString()));
     });
   }
 }

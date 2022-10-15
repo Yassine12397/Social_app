@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_app/layout/social_layout/cubit/cubit.dart';
 import 'package:flutter_app/layout/social_layout/cubit/states.dart';
 import 'package:flutter_app/models/social_user_model.dart';
+import 'package:flutter_app/modules/chats/chat_details.dart';
 import 'package:flutter_app/shared/components/component.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,7 +19,7 @@ class ChatsScreen extends StatelessWidget {
           builder: (context) => ListView.separated(
               physics: BouncingScrollPhysics(),
               itemBuilder: (context, index) =>
-                  buildChatItem(SocialCubit.get(context).users[index]),
+                  buildChatItem(SocialCubit.get(context).users[index],context),
               separatorBuilder: (context, index) => MyDivider(),
               itemCount: SocialCubit.get(context).users.length),
           fallback: (context) => Center(child: CircularProgressIndicator()),
@@ -27,8 +28,10 @@ class ChatsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildChatItem(SocialUserModel userModel) => InkWell(
-        onTap: () {},
+  Widget buildChatItem(SocialUserModel userModel,context) => InkWell(
+        onTap: () {
+          NavigateTo(context, ChatDetailsScreen(userModel: userModel));
+        },
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Row(
