@@ -1,19 +1,25 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/layout/social_layout/cubit/cubit.dart';
 import 'package:flutter_app/layout/social_layout/cubit/states.dart';
+import 'package:flutter_app/models/post_model.dart';
 import 'package:flutter_app/modules/edit_profile/edit_profile_screen.dart';
+import 'package:flutter_app/modules/new_post/new_post_screen.dart';
 import 'package:flutter_app/shared/components/component.dart';
+import 'package:flutter_app/shared/styles/colors.dart';
 import 'package:flutter_app/shared/styles/icon_broken.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SettingsScreen extends StatelessWidget {
+  List<TextEditingController>? controllers = [];
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialStates>(
       listener: (context, state) {
-        if (SocialCubit.get(context).model == null) {
+        /*  if (SocialCubit.get(context).model == null) {
           SocialCubit.get(context).getUserData();
-        }
+        } */
       },
       builder: (context, state) {
         var userModel = SocialCubit.get(context).model;
@@ -27,7 +33,6 @@ class SettingsScreen extends StatelessWidget {
                   alignment: AlignmentDirectional.bottomCenter,
                   children: [
                     Align(
-                      alignment: AlignmentDirectional.topCenter,
                       child: Container(
                         width: double.infinity,
                         height: 140,
@@ -41,6 +46,7 @@ class SettingsScreen extends StatelessWidget {
                               fit: BoxFit.cover,
                             )),
                       ),
+                      alignment: AlignmentDirectional.topCenter,
                     ),
                     CircleAvatar(
                       radius: 64,
@@ -48,7 +54,7 @@ class SettingsScreen extends StatelessWidget {
                           Theme.of(context).scaffoldBackgroundColor,
                       child: CircleAvatar(
                         radius: 60,
-                        backgroundImage: NetworkImage('${userModel!.image}'),
+                        backgroundImage: NetworkImage('${userModel.image}'),
                       ),
                     ),
                   ],
@@ -144,7 +150,9 @@ class SettingsScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        NavigateTo(context, NewPostScreen());
+                      },
                       child: Text('Add Photos'),
                     ),
                   ),
@@ -161,7 +169,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   )
                 ],
-              )
+              ),
             ],
           ),
         );

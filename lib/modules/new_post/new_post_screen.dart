@@ -44,7 +44,8 @@ class NewPostScreen extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 25,
-                      backgroundImage: NetworkImage('${SocialCubit.get(context).model!.image}'),
+                      backgroundImage: NetworkImage(
+                          '${SocialCubit.get(context).model!.image}'),
                     ),
                     SizedBox(
                       width: 15,
@@ -74,17 +75,6 @@ class NewPostScreen extends StatelessWidget {
                   Stack(
                     alignment: AlignmentDirectional.topEnd,
                     children: [
-                      IconButton(
-                          onPressed: () {
-                            SocialCubit.get(context).removePostImage();
-                          },
-                          icon: CircleAvatar(
-                            radius: 20,
-                            child: Icon(
-                              Icons.close,
-                              size: 16,
-                            ),
-                          )),
                       Container(
                         width: double.infinity,
                         height: 140,
@@ -96,6 +86,17 @@ class NewPostScreen extends StatelessWidget {
                               fit: BoxFit.cover,
                             )),
                       ),
+                      IconButton(
+                          onPressed: () {
+                            SocialCubit.get(context).removePostImage();
+                          },
+                          icon: CircleAvatar(
+                            radius: 20,
+                            child: Icon(
+                              Icons.close,
+                              size: 16,
+                            ),
+                          )),
                     ],
                   ),
                 SizedBox(

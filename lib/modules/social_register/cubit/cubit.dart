@@ -21,8 +21,6 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
-      print(value.user!.email);
-      print(value.user!.uid);
       userCreate(uId: value.user!.uid, email: email, name: name, phone: phone);
     }).catchError((error) {
       emit(SocialRegisterErrorState(error.toString()));
@@ -50,9 +48,9 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
         phone: phone,
         bio: 'Write your bio',
         image:
-            'https://img.freepik.com/photos-premium/jeune-bel-homme-barbe-isole-gardant-bras-croises-position-frontale_1368-132662.jpg?w=1060',
+            'https://img.freepik.com/photos-premium/jeune-bel-homme-barbe-isole-gardant-bras-croises-position-frontale_1368-132662.jpg',
         cover:
-        'https://img.freepik.com/photos-premium/jeune-bel-homme-barbe-isole-gardant-bras-croises-position-frontale_1368-132662.jpg?w=1060',
+            'https://img.freepik.com/photos-gratuite/jeune-femme-excitee-montrant-banniere-pointant-du-doigt-vers-gauche-souriant-camera-debout-etonnee-par-mur-blanc_176420-37497.jpg',
         name: name,
         uId: uId,
         isEmailVerified: false);

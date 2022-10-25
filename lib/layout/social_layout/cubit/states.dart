@@ -54,11 +54,15 @@ class SocialCreatePostSuccessState extends SocialStates {}
 
 class SocialCreatePostErrorState extends SocialStates {}
 
+class SocialRemoveTextState extends SocialStates {}
+
 class SocialPostImagePickedSuccessState extends SocialStates {}
 
 class SocialPostImagePickedErrorState extends SocialStates {}
 
 class SocialRemovePostImageState extends SocialStates {}
+
+class SocialRemoveMessageImageState extends SocialStates {}
 
 class SocialGetPostsLoadingStates extends SocialStates {}
 
@@ -99,5 +103,13 @@ class SocialGetMessageSuccessStates extends SocialStates {}
 class SocialMessageImagePickedSuccessState extends SocialStates {}
 
 class SocialMessageImagePickedErrorState extends SocialStates {}
+
+class SocialLogOutSuccessState extends SocialStates {}
+
+class SocialLogOutErrorState extends SocialStates {
+  final String error;
+
+  SocialLogOutErrorState(this.error);
+}
 
 

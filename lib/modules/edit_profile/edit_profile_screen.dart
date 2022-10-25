@@ -5,6 +5,7 @@ import 'package:flutter_app/shared/components/component.dart';
 import 'package:flutter_app/shared/styles/icon_broken.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// ignore: must_be_immutable
 class EditProfileScreen extends StatelessWidget {
   var nameController = TextEditingController();
   var bioController = TextEditingController();
@@ -19,8 +20,8 @@ class EditProfileScreen extends StatelessWidget {
         var profileImage = SocialCubit.get(context).profileImage;
         var coverImage = SocialCubit.get(context).coverImage;
         nameController.text = userModel!.name;
-        bioController.text = userModel!.bio;
-        phoneController.text = userModel!.phone;
+        bioController.text = userModel.bio;
+        phoneController.text = userModel.phone;
 
         return Scaffold(
           appBar:
@@ -57,6 +58,22 @@ class EditProfileScreen extends StatelessWidget {
                           child: Stack(
                             alignment: AlignmentDirectional.topEnd,
                             children: [
+                              Container(
+                                width: double.infinity,
+                                height: 140,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(4),
+                                      topRight: Radius.circular(4),
+                                    ),
+                                    image: DecorationImage(
+                                      image: coverImage == null
+                                          ? NetworkImage('${userModel.cover}')
+                                          : FileImage(coverImage)
+                                              as ImageProvider,
+                                      fit: BoxFit.cover,
+                                    )),
+                              ),
                               IconButton(
                                   onPressed: () {
                                     SocialCubit.get(context).getCoverImage();
@@ -68,22 +85,6 @@ class EditProfileScreen extends StatelessWidget {
                                       size: 16,
                                     ),
                                   )),
-                              Container(
-                                width: double.infinity,
-                                height: 140,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(4),
-                                      topRight: Radius.circular(4),
-                                    ),
-                                    image: DecorationImage(
-                                      image: coverImage == null
-                                          ? NetworkImage('${userModel!.cover}')
-                                          : FileImage(coverImage)
-                                              as ImageProvider,
-                                      fit: BoxFit.cover,
-                                    )),
-                              ),
                             ],
                           ),
                         ),
@@ -97,7 +98,7 @@ class EditProfileScreen extends StatelessWidget {
                               child: CircleAvatar(
                                 radius: 60,
                                 backgroundImage: profileImage == null
-                                    ? NetworkImage('${userModel!.image}')
+                                    ? NetworkImage('${userModel.image}')
                                     : FileImage(profileImage) as ImageProvider,
                               ),
                             ),
@@ -135,7 +136,7 @@ class EditProfileScreen extends StatelessWidget {
                                         phone: phoneController.text,
                                         bio: bioController.text);
                                   },
-                                  text: 'Upload profile image'),
+                                  text: 'Upload profile '),
                               if (state is SocialUserUpdateLoadingState)
                                 SizedBox(height: 5),
                               if (state is SocialUserUpdateLoadingState)
@@ -156,7 +157,7 @@ class EditProfileScreen extends StatelessWidget {
                                         phone: phoneController.text,
                                         bio: bioController.text);
                                   },
-                                  text: 'Upload cover image'),
+                                  text: 'Upload cover '),
                               if (state is SocialUserUpdateLoadingState)
                                 SizedBox(height: 5),
                               if (state is SocialUserUpdateLoadingState)

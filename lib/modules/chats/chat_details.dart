@@ -37,12 +37,16 @@ class ChatDetailsScreen extends StatelessWidget {
                     SizedBox(
                       width: 15,
                     ),
-                    Text(userModel.name)
+                    Text(
+                      userModel.name,
+                      style: TextStyle(fontSize: 17),
+                    )
                   ],
                 ),
               ),
               body: ConditionalBuilder(
-                condition: SocialCubit.get(context).messages.length > 0,
+                condition: //SocialCubit.get(context).messages.length > 0
+                    true,
                 builder: (context) => Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -55,8 +59,8 @@ class ChatDetailsScreen extends StatelessWidget {
                                 SocialCubit.get(context).messages[index];
                             if (SocialCubit.get(context).model!.uId ==
                                 message.senderId)
-                              return buildMyMessage(message);
-                            return buildMessage(message);
+                              return buildMyMessage(message, context);
+                            return buildMessage(message, context);
                           },
                           separatorBuilder: (context, index) => SizedBox(
                             height: 12,
@@ -64,6 +68,34 @@ class ChatDetailsScreen extends StatelessWidget {
                           itemCount: SocialCubit.get(context).messages.length,
                         ),
                       ),
+                      if (SocialCubit.get(context).messagePicture != null)
+                        Stack(
+                          alignment: AlignmentDirectional.topEnd,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              height: 160,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  image: DecorationImage(
+                                    image: FileImage(SocialCubit.get(context)
+                                        .messagePicture!),
+                                    fit: BoxFit.fill,
+                                  )),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  SocialCubit.get(context).removeMessageImage();
+                                },
+                                icon: CircleAvatar(
+                                  radius: 20,
+                                  child: Icon(
+                                    Icons.close,
+                                    size: 16,
+                                  ),
+                                )),
+                          ],
+                        ),
                       Container(
                         clipBehavior: Clip.antiAliasWithSaveLayer,
                         decoration: BoxDecoration(
@@ -77,8 +109,9 @@ class ChatDetailsScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             Container(
+                              padding: EdgeInsets.only(right: 10, left: 2),
                               height: 40,
-                              color: defaultColor,
+                              color: Colors.white,
                               child: MaterialButton(
                                 onPressed: () {
                                   SocialCubit.get(context).getMessageImage();
@@ -87,7 +120,7 @@ class ChatDetailsScreen extends StatelessWidget {
                                 child: Icon(
                                   IconBroken.Camera,
                                   size: 16,
-                                  color: Colors.white,
+                                  color: defaultColor,
                                 ),
                               ),
                             ),
@@ -102,7 +135,7 @@ class ChatDetailsScreen extends StatelessWidget {
                             ),
                             Container(
                               height: 40,
-                              color: defaultColor,
+                              color: Colors.white,
                               child: MaterialButton(
                                 onPressed: () {
                                   if (SocialCubit.get(context).messagePicture ==
@@ -111,17 +144,20 @@ class ChatDetailsScreen extends StatelessWidget {
                                         receiverId: userModel.uId,
                                         dateTime: DateTime.now().toString(),
                                         text: messageController.text);
-                                  else
+                                  else {
                                     SocialCubit.get(context).uploadMessageImage(
                                         receiverId: userModel.uId,
                                         dateTime: DateTime.now().toString(),
                                         text: messageController.text);
+                                    SocialCubit.get(context)
+                                        .removeText(messageController);
+                                  }
                                 },
                                 minWidth: 1,
                                 child: Icon(
                                   IconBroken.Send,
                                   size: 16,
-                                  color: Colors.white,
+                                  color: defaultColor,
                                 ),
                               ),
                             )
@@ -141,37 +177,72 @@ class ChatDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildMessage(MessageModel model) => Align(
+  Widget buildMessage(MessageModel model, context) => Align(
         alignment: AlignmentDirectional.centerStart,
         child: Container(
-            decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadiusDirectional.only(
-                  bottomEnd: Radius.circular(10),
-                  topStart: Radius.circular(10),
-                  topEnd: Radius.circular(10),
-                )),
-            padding: EdgeInsets.symmetric(
-              vertical: 5,
-              horizontal: 10,
-            ),
-            child: Text(model.text)),
+            child: Column(
+          children: [
+            if (model.text != "")
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadiusDirectional.only(
+                          bottomEnd: Radius.circular(10),
+                          topStart: Radius.circular(10),
+                          topEnd: Radius.circular(10),
+                        )),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 5,
+                      horizontal: 10,
+                    ),
+                    child: Text(model.text)),
+              ),
+            if (SocialCubit.get(context).messagePicture != null)
+              Container(
+                width: double.infinity,
+                height: 120,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    image: DecorationImage(
+                      image:
+                          FileImage(SocialCubit.get(context).messagePicture!),
+                      fit: BoxFit.fill,
+                    )),
+              ),
+          ],
+        )),
       );
 
-  Widget buildMyMessage(MessageModel model) => Align(
+  Widget buildMyMessage(MessageModel model, context) => Align(
         alignment: AlignmentDirectional.centerEnd,
         child: Container(
-            decoration: BoxDecoration(
-                color: defaultColor.withOpacity(.2),
-                borderRadius: BorderRadiusDirectional.only(
-                  bottomStart: Radius.circular(10),
-                  topStart: Radius.circular(10),
-                  topEnd: Radius.circular(10),
-                )),
-            padding: EdgeInsets.symmetric(
-              vertical: 5,
-              horizontal: 10,
-            ),
-            child: Text(model.text)),
+            child: Column(
+          children: [
+            if (model.text != "")
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: defaultColor.withOpacity(.2),
+                        borderRadius: BorderRadiusDirectional.only(
+                          bottomStart: Radius.circular(10),
+                          topStart: Radius.circular(10),
+                          topEnd: Radius.circular(10),
+                        )),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 5,
+                      horizontal: 10,
+                    ),
+                    child: Text(model.text)),
+              ),
+            if (model.messageImage != "")
+              Image(
+                image: NetworkImage(model.messageImage),
+                fit: BoxFit.contain,
+              )
+          ],
+        )),
       );
 }

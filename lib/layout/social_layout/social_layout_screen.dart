@@ -13,8 +13,7 @@ class SocialLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialStates>(
       listener: (context, state) {
-        if(state is SocialNewPostState)
-          NavigateTo(context, NewPostScreen());
+        if (state is SocialNewPostState) NavigateTo(context, NewPostScreen());
       },
       builder: (context, state) {
         var cubit = SocialCubit.get(context);
@@ -24,6 +23,11 @@ class SocialLayout extends StatelessWidget {
             actions: [
               IconButton(onPressed: () {}, icon: Icon(IconBroken.Notification)),
               IconButton(onPressed: () {}, icon: Icon(IconBroken.Search)),
+              IconButton(
+                  onPressed: () {
+                    SocialCubit.get(context).logOut(context);
+                  },
+                  icon: Icon(IconBroken.Logout)),
             ],
           ),
           body: cubit.screens[cubit.currentIndex],
@@ -35,8 +39,6 @@ class SocialLayout extends StatelessWidget {
                   icon: Icon(IconBroken.Chat), label: 'Chats'),
               BottomNavigationBarItem(
                   icon: Icon(IconBroken.Paper_Upload), label: 'Post'),
-              BottomNavigationBarItem(
-                  icon: Icon(IconBroken.Location), label: 'Users'),
               BottomNavigationBarItem(
                   icon: Icon(IconBroken.Setting), label: 'Settings'),
             ],

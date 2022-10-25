@@ -1,5 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/layout/social_layout/cubit/cubit.dart';
 import 'package:flutter_app/layout/social_layout/social_layout_screen.dart';
 import 'package:flutter_app/modules/social_login/cubit/cubit.dart';
 import 'package:flutter_app/modules/social_login/cubit/states.dart';

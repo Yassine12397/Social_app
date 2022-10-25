@@ -5,7 +5,6 @@ import 'package:flutter_app/layout/social_layout/cubit/cubit.dart';
 import 'package:flutter_app/layout/social_layout/social_layout_screen.dart';
 import 'package:flutter_app/layout/theme_cubit/themeCubit.dart';
 import 'package:flutter_app/layout/theme_cubit/themeState.dart';
-import 'package:flutter_app/modules/on_boarding.dart';
 import 'package:flutter_app/modules/social_login/login_screen.dart';
 import 'package:flutter_app/shared/components/blocObserver.dart';
 import 'package:flutter_app/shared/constant/constant.dart';
@@ -19,6 +18,14 @@ void main() {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
+      /* var token = await FirebaseMessaging.instance.getToken();
+      print(token);
+      FirebaseMessaging.onMessage.listen((event) {
+        print(event.data.toString());
+      });
+      FirebaseMessaging.onMessageOpenedApp.listen((event) {
+        print(event.data.toString());
+      });*/
       DioHelper.init();
       await CacheHelper.init();
       Widget widget;
@@ -55,8 +62,9 @@ class MyApp extends StatelessWidget {
             ),
         ),
         BlocProvider(
-          create: (context) => SocialCubit()..getUserData()..getPost(),
-        )
+            create: (context) => SocialCubit()
+              ..getUserData()
+              ..getPost())
       ],
       child: BlocConsumer<ThemeCubit, ThemeStates>(
         listener: (context, state) {},
